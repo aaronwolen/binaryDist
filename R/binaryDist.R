@@ -4,11 +4,12 @@
 #' 
 #' @export
 binaryDist <- function(x) {
-  if (class(x) != "PackedMatrix") {
-    x <- as.PackedMatrix(x)
-  }
+  labels <- rownames(x)
+  if (class(x) != "PackedMatrix") x <- as.PackedMatrix(x)
+  
   dst <- bDist(x)
   attr(dst, "Size") <- ncol(x)
+  if (!is.null(labels)) attr(dst, "Labels") <- labels
   attr(dst, "Diag") <- attr(dst, "Upper") <- FALSE
   attr(dst, "method") <- "binary"
   attr(dst, "call") <- match.call()
