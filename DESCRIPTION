@@ -1,0 +1,23 @@
+Package: binaryDist
+Title: Efficient binary/Jaccard distance
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Nick",  "Kennedy", , "unkown@email.com", role = c("aut")),
+    person("Aaron", "Wolen",   , "aaron@wolen.com",  role = c("cre"))
+    )
+Description: A set of functions to perform fast binary/Jaccard distance
+    calculations on a matrix. It uses raw vectors with the binary data
+    efficiently packed 8 bits to a byte and makes use of 64 bit operators.
+License: GPL3 (>= 3)
+Depends: R (>= 3.1.2)
+Imports: Rcpp (>= 0.12.0)
+LinkingTo: Rcpp
+LazyData: true
+Collate:
+  'RcppExports.R'
+  'binaryDist-package.R'
+  'binaryDist.R'
+  'randomData.R'
+  'utils.R'
+  'zzz.R'
+

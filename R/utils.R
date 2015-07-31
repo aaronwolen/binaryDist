@@ -1,7 +1,3 @@
-library("Rcpp")
-library("plyr")
-sourceCpp("bDist.cpp")
-
 # Converts a binary integer vector into a packed raw vector,
 # padding out at the end to make the input length a multiple of packWidth
 packRow <- function(row, packWidth = 64L) {
@@ -34,25 +30,6 @@ as.matrix.PackedMatrix <- function(x) {
   t(out)
 }
 
-# Generates random sparse data for testing the main function
-makeRandomData <- function(nObs, nVariables, maxBits, packed = FALSE) {
-  x <- replicate(nObs, {
-    y <- integer(nVariables)
-    y[sample(nVariables, sample(maxBits, 1))] <- 1L
-    if (packed) {
-      packRow(y, 64L)
-    } else {
-      y
-    }
-  })
-  if (packed) {
-    class(x) <- "PackedMatrix"
-    x
-  } else {
-    t(x)
-  }
-}
-
 # Reads a binary matrix from file or character vector
 # Borrows the first bit of code from read.table
 readPackedMatrix <- function(file = NULL, text = NULL, packWidth = 64L) {
@@ -80,21 +57,3 @@ readPackedMatrix <- function(file = NULL, text = NULL, packWidth = 64L) {
   class(out) <- "PackedMatrix"
   out
 }
-
-# Wrapper for the C++ code which 
-binaryDist <- function(x) {
-  if (class(x) != "PackedMatrix") {
-    x <- as.PackedMatrix(x)
-  }
-  dst <- bDist(x)
-  attr(dst, "Size") <- ncol(x)
-  attr(dst, "Diag") <- attr(dst, "Upper") <- FALSE
-  attr(dst, "method") <- "binary"
-  attr(dst, "call") <- match.call()
-  class(dst) <- "dist"
-  dst
-}
-
-x <- makeRandomData(2000, 400, maxBits = 5, packed = TRUE)
-
-system.time(bd <- binaryDist(x))
